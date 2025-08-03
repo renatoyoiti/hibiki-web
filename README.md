@@ -14,6 +14,16 @@ Em ambientes de trabalho movimentados, home offices ou qualquer lugar onde o ru�
 - **Zustand** - Gerenciamento de estado
 - **ESLint** - Linter para JavaScript/TypeScript
 
+## Recursos de Áudio
+
+Todos os sons ambientes utilizados neste projeto foram obtidos através do [Freesound](https://freesound.org/) sob a licença Creative Commons 0 (CC0). Esta licença permite o uso irrestrito dos arquivos de áudio, sem necessidade de atribuição.
+
+### Créditos dos Áudios
+
+- **Som de Chuva**: ["Under Tree In Rain.mp3" por causative](https://freesound.org/s/102674/) - Licença: Creative Commons 0
+- **Som de Fogueira**: ["Bonfire HQ.wav" por tosha73](https://freesound.org/s/513280/) - Licença: Creative Commons 0
+- **Som de Trovão**: ["thunder 2" por elmoustachio](https://freesound.org/s/476736/) - Licença: Creative Commons 0
+
 ## Como Executar Localmente
 
 ### Pré-requisitos
