@@ -1,15 +1,57 @@
-# React + TypeScript + Vite
+# Hibiki Noise 🎧
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Hibiki Noise é uma aplicação web projetada para aumentar a produtividade através do gerenciamento de sons ambientes. O aplicativo oferece uma variedade de sons relaxantes e ruídos (como som de chuva, fogueira e trovões) que ajudam a mascarar distrações sonoras do ambiente, criando um ambiente mais propício para o foco e concentração.
 
-Currently, two official plugins are available:
+## Sobre o Projeto
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Em ambientes de trabalho movimentados, home offices ou qualquer lugar onde o ruído ambiente possa ser uma distração, Hibiki Noise oferece uma solução elegante para melhorar sua experiência sonora e, consequentemente, sua produtividade.
 
-## Expanding the ESLint configuration
+## Tecnologias Utilizadas
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **React** - Biblioteca JavaScript para construção de interfaces
+- **TypeScript** - Superset JavaScript com tipagem estática
+- **Vite** - Build tool e dev server
+- **Zustand** - Gerenciamento de estado
+- **ESLint** - Linter para JavaScript/TypeScript
+
+## Como Executar Localmente
+
+### Pré-requisitos
+
+- Node.js (versão 16 ou superior)
+- npm ou yarn
+
+### Instalação
+
+1. Clone o repositório
+```bash
+git clone <seu-repositorio>
+cd hibiki-web
+```
+
+2. Instale as dependências
+```bash
+npm install
+# ou
+yarn
+```
+
+3. Execute o projeto em modo de desenvolvimento
+```bash
+npm run dev
+# ou
+yarn dev
+```
+
+O aplicativo estará disponível em `http://localhost:5173`
+
+## Licença
+
+Este projeto está licenciado sob a Creative Commons Attribution-NonCommercial 4.0 International License - veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+## Configuração do ESLint
+
+Se você estiver desenvolvendo uma aplicação para produção, recomendamos atualizar a configuração para habilitar regras de lint com verificação de tipos:
 
 ```js
 export default tseslint.config([
