@@ -166,6 +166,7 @@ export const useSoundStore = create<SoundState>((set, get) => ({
         previousVolume: null,
       })),
       isGlobalMuted: false,
+      isGlobalPaused: false,
       globalPreMuteVolumes: {},
     });
   },
