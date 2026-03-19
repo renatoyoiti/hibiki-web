@@ -40,6 +40,8 @@ export default function Home() {
     if (!renameTarget) return;
     try {
       await updatePreset(renameTarget.id, { name });
+    } catch (error) {
+      console.error('Failed to rename preset:', error);
     } finally {
       setRenameTarget(null);
     }
@@ -49,6 +51,8 @@ export default function Home() {
     if (!deleteTarget) return;
     try {
       await deletePreset(deleteTarget.id);
+    } catch (error) {
+      console.error('Failed to delete preset:', error);
     } finally {
       setDeleteTarget(null);
     }
