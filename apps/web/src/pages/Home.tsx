@@ -38,14 +38,20 @@ export default function Home() {
 
   async function handleRenameConfirm(name: string) {
     if (!renameTarget) return;
-    await updatePreset(renameTarget.id, { name });
-    setRenameTarget(null);
+    try {
+      await updatePreset(renameTarget.id, { name });
+    } finally {
+      setRenameTarget(null);
+    }
   }
 
   async function handleDeleteConfirm() {
     if (!deleteTarget) return;
-    await deletePreset(deleteTarget.id);
-    setDeleteTarget(null);
+    try {
+      await deletePreset(deleteTarget.id);
+    } finally {
+      setDeleteTarget(null);
+    }
   }
 
   return (
