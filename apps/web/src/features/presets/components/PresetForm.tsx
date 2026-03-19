@@ -22,7 +22,8 @@ export default function PresetForm({
 
   useEffect(() => {
     if (isOpen) setName(initialName);
-  }, [isOpen, initialName]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
