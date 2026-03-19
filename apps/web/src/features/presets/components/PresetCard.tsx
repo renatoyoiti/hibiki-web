@@ -61,6 +61,7 @@ export default function PresetCard({
       {/* Botão Carregar */}
       <button
         onClick={onLoad}
+        disabled={isActive}
         className={[
           'flex items-center gap-1.5 text-xs font-semibold py-1.5 px-3 rounded-lg transition-colors self-start',
           isActive
