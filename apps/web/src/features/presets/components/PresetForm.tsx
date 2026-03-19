@@ -29,11 +29,11 @@ export default function PresetForm({
   useEffect(() => {
     if (!isOpen) return;
     function handleKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') onCancel();
+      if (e.key === 'Escape' && !isSubmitting) onCancel();
     }
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [isOpen, onCancel]);
+  }, [isOpen, onCancel, isSubmitting]);
 
   if (!isOpen) return null;
 

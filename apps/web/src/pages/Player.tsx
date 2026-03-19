@@ -51,8 +51,13 @@ export default function Player() {
   }
 
   async function handleSaveNew(name: string) {
-    await createPreset(name);
-    setSaveFormOpen(false);
+    try {
+      await createPreset(name);
+    } catch (error) {
+      console.error('Failed to save preset:', error);
+    } finally {
+      setSaveFormOpen(false);
+    }
   }
 
   async function handleSaveChanges() {
