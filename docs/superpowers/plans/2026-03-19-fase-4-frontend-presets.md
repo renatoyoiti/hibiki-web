@@ -390,7 +390,7 @@ export const usePresetStore = create<PresetStore>((set, get) => ({
 }));
 ```
 
-- [ ] **Step 2: Verificar tipos**
+- [ ] **Step 3: Verificar tipos**
 
 ```bash
 cd apps/web && npx tsc --noEmit
@@ -398,7 +398,7 @@ cd apps/web && npx tsc --noEmit
 
 Esperado: 0 erros.
 
-- [ ] **Step 3: Commit**
+- [ ] **Step 4: Commit**
 
 ```bash
 git add apps/web/src/features/presets/store/presetStore.ts
@@ -561,6 +561,8 @@ export interface PresetSoundItem {
 }
 ```
 
+Se `name` estiver ausente, adicioná-lo ao tipo e verificar que a API (`GET /api/presets`) retorna o campo `name` em cada item de `sounds`. O backend em `presetService.ts` (`apps/api`) já faz o JOIN com a tabela `sounds` para incluir o nome — basta adicionar o campo ao tipo TypeScript do frontend.
+
 - [ ] **Step 2: Criar `apps/web/src/features/presets/components/PresetCard.tsx`**
 
 ```typescript
@@ -666,12 +668,11 @@ git commit -m "feat(web): add PresetCard component"
 
 Adicionar prop opcional `onAfterAdd?: () => void` que é chamada após `addSound()` bem-sucedido. Permite que a Home navegue para `/player` após adicionar um som.
 
-> **Pré-condição:** `addSound()` em `soundStore.ts` já retorna `boolean` (`true` se adicionado, `false` se duplicata — RN-01). Verificar antes de prosseguir:
+> **Pré-condição:** `addSound()` em `soundStore.ts` já retorna `boolean` (`true` se adicionado, `false` se duplicata — RN-01). Confirmar lendo a linha ~20 do store:
 > ```typescript
-> // apps/web/src/features/sound-control/store/soundStore.ts — linha ~20
-> addSound: (sound: Sound) => boolean;
+> addSound: (sound: Sound) => boolean;  // ← deve estar assim
 > ```
-> Se retornar `void`, atualizar o tipo e a implementação no store primeiro (ref. Task 1 já adicionou as outras ações; adicionar o retorno `boolean` lá se necessário).
+> Se por algum motivo estiver tipado como `void`, alterar a assinatura na interface para `boolean` e garantir que a implementação retorne explicitamente `true` após `set(...)` e `false` na duplicata. O código atual do store já faz isso corretamente.
 
 - [ ] **Step 1: Atualizar a interface e o botão em SoundCard.tsx**
 
@@ -772,6 +773,7 @@ export default function Player() {
   const {
     presets,
     activePresetId,
+    fetchPresets,
     createPreset,
     updatePreset,
     setActivePresetId,
@@ -784,6 +786,11 @@ export default function Player() {
   useEffect(() => {
     if (sounds.length === 0) fetchSounds();
   }, [sounds.length, fetchSounds]);
+
+  // Garante que os presets estejam carregados ao navegar direto para /player
+  useEffect(() => {
+    if (presets.length === 0) fetchPresets();
+  }, [presets.length, fetchPresets]);
 
   function handleStop() {
     clearActiveSounds();
