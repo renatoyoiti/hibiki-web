@@ -12,6 +12,22 @@ dist
 dist-ssr
 *.local
 
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Sensitive files
+*.pem
+*.key
+*.p12
+*.pfx
+*.cert
+*.crt
+
+# Windows metadata (Zone.Identifier alternate data streams)
+*:Zone.Identifier
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
