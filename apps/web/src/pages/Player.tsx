@@ -62,7 +62,11 @@ export default function Player() {
 
   async function handleSaveChanges() {
     if (!activePresetId) return;
-    await updatePreset(activePresetId);
+    try {
+      await updatePreset(activePresetId);
+    } catch (error) {
+      console.error('Failed to save changes:', error);
+    }
   }
 
   return (

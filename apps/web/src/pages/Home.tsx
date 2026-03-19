@@ -23,6 +23,7 @@ export default function Home() {
   const [query, setQuery] = useState('');
   const [renameTarget, setRenameTarget] = useState<{ id: string; name: string } | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     fetchSounds();
@@ -49,11 +50,13 @@ export default function Home() {
 
   async function handleDeleteConfirm() {
     if (!deleteTarget) return;
+    setIsDeleting(true);
     try {
       await deletePreset(deleteTarget.id);
     } catch (error) {
       console.error('Failed to delete preset:', error);
     } finally {
+      setIsDeleting(false);
       setDeleteTarget(null);
     }
   }
@@ -166,6 +169,7 @@ export default function Home() {
         confirmLabel="Excluir"
         onConfirm={handleDeleteConfirm}
         onCancel={() => setDeleteTarget(null)}
+        isLoading={isDeleting}
       />
     </div>
   );
