@@ -6,7 +6,7 @@ interface PresetFormProps {
   mode: 'create' | 'rename';
   initialName?: string;
   activeSounds?: ActiveSound[];
-  onConfirm: (name: string) => void;
+  onConfirm: (name: string) => Promise<void>;
   onCancel: () => void;
 }
 
@@ -19,6 +19,7 @@ export default function PresetForm({
   onCancel,
 }: PresetFormProps) {
   const [name, setName] = useState(initialName);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (isOpen) setName(initialName);
@@ -39,15 +40,20 @@ export default function PresetForm({
   const title = mode === 'create' ? 'Salvar preset' : 'Renomear preset';
   const confirmLabel = mode === 'create' ? 'Salvar' : 'Renomear';
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!name.trim()) return;
-    onConfirm(name.trim());
+    if (!name.trim() || isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      await onConfirm(name.trim());
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/60" onClick={onCancel} />
+      <div className="absolute inset-0 bg-black/60" onClick={isSubmitting ? undefined : onCancel} />
       <form
         onSubmit={handleSubmit}
         className="relative bg-elevated border border-border rounded-xl p-6 w-full max-w-md mx-4 shadow-xl"
@@ -91,16 +97,17 @@ export default function PresetForm({
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 rounded-lg text-sm font-semibold text-text-secondary border border-border hover:bg-surface-muted transition-colors"
+            disabled={isSubmitting}
+            className="px-4 py-2 rounded-lg text-sm font-semibold text-text-secondary border border-border hover:bg-surface-muted transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Cancelar
           </button>
           <button
             type="submit"
-            disabled={!name.trim()}
+            disabled={!name.trim() || isSubmitting}
             className="px-4 py-2 rounded-lg text-sm font-semibold bg-primary text-white hover:bg-primary-hover transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            {confirmLabel}
+            {isSubmitting ? 'Aguarde...' : confirmLabel}
           </button>
         </div>
       </form>

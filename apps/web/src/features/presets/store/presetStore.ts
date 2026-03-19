@@ -20,8 +20,12 @@ export const usePresetStore = create<PresetStore>((set, get) => ({
   activePresetId: null,
 
   fetchPresets: async () => {
-    const presets = await presetService.list();
-    set({ presets });
+    try {
+      const presets = await presetService.list();
+      set({ presets });
+    } catch (error) {
+      console.error('Failed to fetch presets:', error);
+    }
   },
 
   // Captura o estado atual da fila (activeSounds) e salva como preset
