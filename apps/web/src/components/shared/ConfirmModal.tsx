@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useId, useRef } from 'react';
 import { X } from 'lucide-react';
 
 interface ConfirmModalProps {
@@ -23,6 +23,7 @@ export default function ConfirmModal({
   isLoading = false,
 }: ConfirmModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -49,12 +50,12 @@ export default function ConfirmModal({
     <dialog
       ref={dialogRef}
       className="bg-transparent p-0 max-w-none w-full h-full backdrop:bg-black/60"
-      aria-labelledby="confirm-modal-title"
+      aria-labelledby={titleId}
     >
       <div className="fixed inset-0 z-50 flex items-center justify-center">
         <div className="bg-surface rounded-xl shadow-xl w-full max-w-sm mx-4 p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 id="confirm-modal-title" className="text-lg font-semibold text-text-primary">
+            <h2 id={titleId} className="text-lg font-semibold text-text-primary">
               {title}
             </h2>
             <button
