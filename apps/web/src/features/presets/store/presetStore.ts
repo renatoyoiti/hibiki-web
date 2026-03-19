@@ -48,6 +48,12 @@ export const usePresetStore = create<PresetStore>((set, get) => ({
   deletePreset: async (id) => {
     if (id === get().activePresetId) return;
     await presetService.delete(id);
+    // Re-check after async op — user may have loaded this preset during the request
+    if (get().activePresetId === id) {
+      set({ activePresetId: null });
+    }
+    // Optimistically remove from local list before re-fetch
+    set((state) => ({ presets: state.presets.filter((p) => p.id !== id) }));
     await get().fetchPresets();
   },
 
