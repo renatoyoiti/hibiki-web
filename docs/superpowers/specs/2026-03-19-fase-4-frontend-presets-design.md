@@ -57,9 +57,10 @@ apps/web/src/
 |------|-----------|
 | Home → clicar "+ Adicionar" em um som | `soundStore.addSound()` → `navigate('/player')` |
 | Home → clicar "Carregar" em um preset | `presetStore.loadPreset(preset)` → `navigate('/player')` |
+| Home → clicar "Renomear" em um preset | Abre `PresetForm` com `initialName` → `presetStore.updatePreset(id, { name })` |
 | /player → "Salvar como preset" | Abre `PresetForm` → `presetStore.createPreset(name)` |
-| /player → "Salvar alterações" (só se `activePresetId !== null`) | `presetStore.updatePreset(activePresetId)` |
-| /player → "Parar execução" | `soundStore.clearActiveSounds()` + `presetStore.setActivePresetId(null)` |
+| /player → "Salvar alterações" (só se `activePresetId !== null`) | `presetStore.updatePreset(activePresetId)` (captura sons atuais da fila) |
+| /player → "Parar execução" | `soundStore.clearActiveSounds()` + `presetStore.setActivePresetId(null)` + `navigate('/')` |
 
 ---
 
@@ -71,11 +72,14 @@ Novos campos e ações adicionados ao `soundStore.ts` existente:
 // Estado novo
 isGlobalPaused: boolean;
 
+// Ações existentes (já implementadas na Fase 3)
+loadActiveSounds(items: Array<{ sound: Sound; volume: number }>): void;
+  // Substitui COMPLETAMENTE activeSounds; reseta isGlobalMuted e globalPreMuteVolumes
+
 // Ações novas
-pauseAll(): void;       // pausa áudio de todos os sons (audio.pause())
-resumeAll(): void;      // retoma áudio (audio.play())
-toggleGlobalPause(): void;  // toggle entre pausar e retomar
-clearActiveSounds(): void;  // limpa fila ativa + reseta isGlobalMuted + isGlobalPaused
+toggleGlobalPause(): void;  // toggle isGlobalPaused
+resumeAll(): void;          // seta isGlobalPaused = false (usado por loadPreset)
+clearActiveSounds(): void;  // limpa activeSounds, reseta isGlobalMuted, isGlobalPaused = false
 ```
 
 **`AudioEngine.tsx`** precisa escutar `isGlobalPaused` e chamar `audio.pause()` / `audio.play()` nos sons ativos conforme estado.
@@ -100,7 +104,7 @@ interface PresetStore {
 
 **Regras:**
 
-- `loadPreset(preset)` — chama `soundStore.loadActiveSounds()` com sons válidos do preset; seta `activePresetId = preset.id`; seta `isGlobalPaused = false`
+- `loadPreset(preset)` — chama `soundStore.loadActiveSounds()` com sons válidos do preset; seta `activePresetId = preset.id`; chama `soundStore.resumeAll()` para garantir `isGlobalPaused = false`
 - `createPreset(name)` — lê `soundStore.activeSounds`, mapeia para `{ soundId, volume }`, chama `presetService.create()`, re-fetch lista
 - `updatePreset(id, { name? })` — se `name` fornecido: só atualiza nome; se sem data: captura `soundStore.activeSounds` e atualiza sons; re-fetch lista
 - `deletePreset(id)` — **apenas se `id !== activePresetId`**; soft delete via API; re-fetch lista; **não altera `activeSounds`**
@@ -197,7 +201,7 @@ Página de execução ativa. Layout:
   - "Salvar alterações" → `presetStore.updatePreset(activePresetId)` (só se `activePresetId !== null`)
 - **Lista de sons ativos:** `ActiveSoundItem` para cada som (slider volume, mute individual, remover)
 - **Estado vazio:** "Nenhum som em execução" + CTA para Home
-- **Painel de sons disponíveis** (seção abaixo ou lateral em desktop): sons da biblioteca para adicionar diretamente ao mixer
+- **Painel de sons disponíveis** (seção abaixo ou lateral em desktop): sons da biblioteca para adicionar diretamente ao mixer. Clicar em "+ Adicionar" chama `soundStore.addSound()` e permanece na página `/player` (sem navegação, pois o usuário já está na execução)
 
 ---
 
